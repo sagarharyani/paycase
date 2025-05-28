@@ -1,6 +1,9 @@
+"use client"
+
 import { useEffect } from "react"
 import { supabase } from "../lib/supabase"
 import { useAppStore } from "../store/useAppStore"
+import { initializeRevenueCat } from "../lib/revenuecat"
 
 export const useAuth = () => {
   const { user, setUser, setLoading, setError } = useAppStore()
@@ -9,7 +12,10 @@ export const useAuth = () => {
     const getSession = async () => {
       setLoading(true)
       try {
-        const { data: { session }, error } = await supabase.auth.getSession()
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession()
         if (error) throw error
 
         if (session?.user) {
@@ -21,6 +27,9 @@ export const useAuth = () => {
             created_at: session.user.created_at,
             updated_at: session.user.updated_at || session.user.created_at,
           })
+
+          // Initialize RevenueCat
+          await initializeRevenueCat(session.user.id)
         }
       } catch (error) {
         setError(error instanceof Error ? error.message : "Authentication error")
@@ -31,7 +40,9 @@ export const useAuth = () => {
 
     getSession()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         setUser({
           id: session.user.id,
@@ -41,6 +52,8 @@ export const useAuth = () => {
           created_at: session.user.created_at,
           updated_at: session.user.updated_at || session.user.created_at,
         })
+
+        await initializeRevenueCat(session.user.id)
       } else {
         setUser(null)
       }
@@ -53,7 +66,10 @@ export const useAuth = () => {
     setLoading(true)
     setError(null)
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
       if (error) throw error
     } catch (error) {
       setError(error instanceof Error ? error.message : "Sign in failed")
@@ -70,7 +86,11 @@ export const useAuth = () => {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { name } },
+        options: {
+          data: {
+            name,
+          },
+        },
       })
       if (error) throw error
     } catch (error) {
@@ -93,5 +113,10 @@ export const useAuth = () => {
     }
   }
 
-  return { user, signInWithEmail, signUpWithEmail, signOut }
+  return {
+    user,
+    signInWithEmail,
+    signUpWithEmail,
+    signOut,
+  }
 }

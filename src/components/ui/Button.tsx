@@ -37,8 +37,12 @@ export const Button: React.FC<ButtonProps> = ({
     }
 
     const variantStyles = {
-      primary: { backgroundColor: disabled ? "#9CA3AF" : "#3B82F6" },
-      secondary: { backgroundColor: disabled ? "#F3F4F6" : "#E5E7EB" },
+      primary: {
+        backgroundColor: disabled ? "#9CA3AF" : "#3B82F6",
+      },
+      secondary: {
+        backgroundColor: disabled ? "#F3F4F6" : "#E5E7EB",
+      },
       outline: {
         backgroundColor: "transparent",
         borderWidth: 1,
@@ -55,19 +59,27 @@ export const Button: React.FC<ButtonProps> = ({
   }
 
   const getTextStyle = (): TextStyle => {
-    const baseStyle: TextStyle = { fontWeight: "600" }
+    const baseStyle: TextStyle = {
+      fontWeight: "600",
+    }
+
     const sizeStyles = {
       small: { fontSize: 14 },
       medium: { fontSize: 16 },
       large: { fontSize: 18 },
     }
+
     const variantStyles = {
       primary: { color: "#FFFFFF" },
       secondary: { color: "#374151" },
       outline: { color: disabled ? "#9CA3AF" : "#3B82F6" },
     }
 
-    return { ...baseStyle, ...sizeStyles[size], ...variantStyles[variant] }
+    return {
+      ...baseStyle,
+      ...sizeStyles[size],
+      ...variantStyles[variant],
+    }
   }
 
   return (

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
